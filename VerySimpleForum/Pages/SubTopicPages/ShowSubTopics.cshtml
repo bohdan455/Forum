@@ -1,0 +1,7 @@
+﻿@page
+@model VerySimpleForum.Pages.ShowSubTopicsModel
+@{
+}
+@foreach(var subtopic in Model.SubTopics){
+    <h1> <a asp-for ="/subTopicPages/SubTopicPage?title=@subtopic.Title">@subtopic.Title</a> </h1>
+}

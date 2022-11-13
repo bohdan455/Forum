@@ -1,0 +1,25 @@
+﻿@page
+@model VerySimpleForum.Pages.Account.RegistrationModel
+@{
+}
+<h1>Registration Page</h1>
+<div asp-validation-summary="All" class="text-danger"></div>
+<form method="post">
+    <div>
+        <label asp-for="Registration.UserName">Login: </label>
+        <input type="text" asp-for="Registration.UserName" class="form-control" />
+    </div>
+    <div>
+        <label asp-for="Registration.Email">Email: </label>
+        <input type="email" asp-for="Registration.Email" class="form-control" />
+    </div>
+    <div>
+        <label asp-for="Registration.Password">Password: </label>
+        <input type="password" asp-for="Registration.Password" class="form-control" />
+    </div>
+    <div>
+        <label asp-for="Registration.RepeatPassword">Repeat password: </label>
+        <input type="password" asp-for="Registration.RepeatPassword" class="form-control" />
+    </div>
+    <input type="submit" value="Login" class="btn btn-primary" />
+</form>

@@ -1,0 +1,16 @@
+﻿@page
+@model VerySimpleForum.Pages.SubTopicPages.SubTopicFormModel
+@{
+}
+<h1>Create new Topic</h1>
+<form method="post">
+    <div>
+        <label asp-for="SubTopicData.Title">Title: </label>
+        <input type="text" asp-for="SubTopicData.Title" class="form-control" />
+    </div>
+    <div>
+        <label asp-for="SubTopicData.Body">Content: </label> <br />
+        <textarea asp-for="SubTopicData.Body" class="form-control" rows="7"> </textarea>
+    </div>
+    <input type="submit" value="Submit" class="btn btn-primary"/>
+</form>

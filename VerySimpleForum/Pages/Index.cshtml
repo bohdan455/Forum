@@ -1,0 +1,12 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+    @if(User.Identity.IsAuthenticated){
+        <h2> <a asp-page="SubTopicPages/SubTopicForm">Create new SubTopic </a></h2>
+    }
+</div>

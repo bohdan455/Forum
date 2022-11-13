@@ -1,0 +1,17 @@
+﻿@page
+@model VerySimpleForum.Pages.Account.LoginModel
+@{
+}
+<h1>Login Page</h1>
+<div asp-validation-summary="All" class="text-danger"></div>
+<form method="post">
+    <div>
+        <label asp-for="Login.UserName">UserName: </label>
+        <input type="text" asp-for="Login.UserName" class="form-control" />
+    </div>
+    <div>
+        <label asp-for="Login.Password">Password: </label>
+        <input type="password" asp-for="Login.Password" class="form-control"/>
+    </div>
+    <input type="submit" value="Login" class="btn btn-primary" />
+</form>

@@ -1,0 +1,11 @@
+﻿<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+
+@if(User.Identity.IsAuthenticated){
+    <form method="post" class="form-inline" asp-page="account/logout">
+        <input type="submit" value="Sign out" />
+    </form>
+}else{
+    <a asp-page="Account/Login">Sign in</a>
+    <a asp-page="Account/Registration" style="margin-left: 10px">Registration</a>
+}
