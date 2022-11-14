@@ -6,7 +6,7 @@
 <h2>@Model.SubTopic.Likes</h2>
 <p>@Model.SubTopic.Body</p>
 <span>@Model.SubTopic.Created.ToUniversalTime()</span>
-<h5>Likes: @Model.SubTopic.Likes</h5>
+<h5>Likes:@{ @Model.SubTopic.Likes?.Count()} </h5>
 <form>
-    <button class="btn btn-primary" asp-action="like">Like</button>
+    <button class="btn btn-primary" asp-action="like" name="Test">Like</button>
 </form>

@@ -3,5 +3,5 @@
 @{
 }
 @foreach(var subtopic in Model.SubTopics){
-    <h1> <a asp-for ="/subTopicPages/SubTopicPage?title=@subtopic.Title">@subtopic.Title</a> </h1>
+    <h1> <a asp-page="/subTopicPages/SubTopicPage" asp-route-title="@subtopic.Title">@subtopic.Title</a> </h1>
 }

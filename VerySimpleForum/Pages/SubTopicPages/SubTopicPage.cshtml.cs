@@ -14,13 +14,15 @@ namespace VerySimpleForum.Pages.SubTopicPages
             this.context = context;
             Logger = logger;
         }
-
+        private string _title; 
         [BindProperty]
         public SubTopic SubTopic { get; set; }
 
         public ILogger Logger { get; }
+
         public IActionResult OnGet(string title)
         {
+            _title = title;
             Logger.LogInformation("GET");
             SubTopic = context.SubTopics.Where(SubTopic => SubTopic.Title == title).FirstOrDefault();
             if (SubTopic == null)
@@ -32,13 +34,15 @@ namespace VerySimpleForum.Pages.SubTopicPages
                 return Page();
             }
         }
-        public void like()
+        public IActionResult like(string button)
         {
-            Logger.LogInformation("Click");
-            /*            var user = context.Users.Where(user => user.UserName == User.Identity.Name).FirstOrDefault();
-                        if (context.SubTopics.Where(subTopic => subTopic.Likes.Contains(user)).Any()){
+            Logger.LogInformation(_title);
+            var user = context.Users.Where(user => user.UserName == User.Identity.Name).FirstOrDefault();
+            if (context.SubTopics.Where(subTopic => subTopic.Likes.Contains(user)).Any())
+            {
 
-                        }*/
+            }
+            return RedirectToPage("/index");
         }
     }
 }
