@@ -12,7 +12,7 @@ using VerySimpleForum.DataBase;
 namespace VerySimpleForum.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20221113154723_InitialCreate")]
+    [Migration("20221118162725_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -157,6 +157,33 @@ namespace VerySimpleForum.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("VerySimpleForum.DataBase.Models.Comment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("BelongsToId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Body")
+                        .IsRequired()
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
+
+                    b.Property<DateTime>("CreatedTime")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BelongsToId");
+
+                    b.ToTable("Comment");
+                });
+
             modelBuilder.Entity("VerySimpleForum.DataBase.Models.SubTopic", b =>
                 {
                     b.Property<int>("Id")
@@ -169,20 +196,26 @@ namespace VerySimpleForum.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("CommentsId")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("Created")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("CreatorId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("Likes")
+                    b.Property<int>("LikesNumber")
                         .HasColumnType("int");
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(400)
+                        .HasColumnType("nvarchar(400)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CommentsId");
 
                     b.HasIndex("CreatorId");
 
@@ -237,6 +270,9 @@ namespace VerySimpleForum.Migrations
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("SubTopicId")
+                        .HasColumnType("int");
+
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("bit");
 
@@ -253,6 +289,8 @@ namespace VerySimpleForum.Migrations
                         .IsUnique()
                         .HasDatabaseName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
+
+                    b.HasIndex("SubTopicId");
 
                     b.ToTable("AspNetUsers", (string)null);
                 });
@@ -308,13 +346,44 @@ namespace VerySimpleForum.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("VerySimpleForum.DataBase.Models.Comment", b =>
+                {
+                    b.HasOne("VerySimpleForum.DataBase.Models.User", "BelongsTo")
+                        .WithMany()
+                        .HasForeignKey("BelongsToId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("BelongsTo");
+                });
+
             modelBuilder.Entity("VerySimpleForum.DataBase.Models.SubTopic", b =>
                 {
+                    b.HasOne("VerySimpleForum.DataBase.Models.Comment", "Comments")
+                        .WithMany()
+                        .HasForeignKey("CommentsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("VerySimpleForum.DataBase.Models.User", "Creator")
                         .WithMany()
                         .HasForeignKey("CreatorId");
 
+                    b.Navigation("Comments");
+
                     b.Navigation("Creator");
+                });
+
+            modelBuilder.Entity("VerySimpleForum.DataBase.Models.User", b =>
+                {
+                    b.HasOne("VerySimpleForum.DataBase.Models.SubTopic", null)
+                        .WithMany("Likes")
+                        .HasForeignKey("SubTopicId");
+                });
+
+            modelBuilder.Entity("VerySimpleForum.DataBase.Models.SubTopic", b =>
+                {
+                    b.Navigation("Likes");
                 });
 #pragma warning restore 612, 618
         }

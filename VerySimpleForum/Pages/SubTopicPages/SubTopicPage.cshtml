@@ -6,7 +6,16 @@
 <h2>@Model.SubTopic.Likes</h2>
 <p>@Model.SubTopic.Body</p>
 <span>@Model.SubTopic.Created.ToUniversalTime()</span>
-<h5>Likes:@{ @Model.SubTopic.Likes?.Count()} </h5>
-<form>
-    <button class="btn btn-primary" asp-action="like" name="Test">Like</button>
+<h5>Likes:@{ @Model.SubTopic.LikesNumber} </h5>
+
+<form method="post" asp-page="/SubTopicPages/LikeAction" asp-route-title="@Model.SubTopic.Title">
+    <button type="submit" class="btn btn-primary" name="Test">Like</button>
+</form>
+<h1>Comments</h1>
+<form method="post">
+    <div>
+        <label asp-for="Comment.Body">Content: </label> <br />
+        <textarea asp-for="Comment.Body" class="form-control" rows="3"> </textarea>
+    </div>
+    <input type="submit" value="Submit" class="btn btn-primary" />
 </form>

@@ -1,7 +1,10 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.ComponentModel;
 using VerySimpleForum.DataBase;
 using VerySimpleForum.DataBase.Models;
+using VerySimpleForum.DTO;
 
 namespace VerySimpleForum.Pages.SubTopicPages
 {
@@ -14,16 +17,13 @@ namespace VerySimpleForum.Pages.SubTopicPages
             this.context = context;
             Logger = logger;
         }
-        private string _title; 
         [BindProperty]
         public SubTopic SubTopic { get; set; }
-
+        [BindProperty]
+        public CommentDTO Comment { get; set; }
         public ILogger Logger { get; }
-
         public IActionResult OnGet(string title)
         {
-            _title = title;
-            Logger.LogInformation("GET");
             SubTopic = context.SubTopics.Where(SubTopic => SubTopic.Title == title).FirstOrDefault();
             if (SubTopic == null)
             {
@@ -34,15 +34,11 @@ namespace VerySimpleForum.Pages.SubTopicPages
                 return Page();
             }
         }
-        public IActionResult like(string button)
+        [Authorize]
+        public IActionResult OnPost()
         {
-            Logger.LogInformation(_title);
-            var user = context.Users.Where(user => user.UserName == User.Identity.Name).FirstOrDefault();
-            if (context.SubTopics.Where(subTopic => subTopic.Likes.Contains(user)).Any())
-            {
-
-            }
-            return RedirectToPage("/index");
+            return RedirectPermanent("/index");
         }
+
     }
 }

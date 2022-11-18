@@ -155,6 +155,38 @@ namespace VerySimpleForum.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("VerySimpleForum.DataBase.Models.Comment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("BelongsToId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Body")
+                        .IsRequired()
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
+
+                    b.Property<DateTime>("CreatedTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("SubTopicId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BelongsToId");
+
+                    b.HasIndex("SubTopicId");
+
+                    b.ToTable("Comment");
+                });
+
             modelBuilder.Entity("VerySimpleForum.DataBase.Models.SubTopic", b =>
                 {
                     b.Property<int>("Id")
@@ -173,9 +205,13 @@ namespace VerySimpleForum.Migrations
                     b.Property<string>("CreatorId")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<int>("LikesNumber")
+                        .HasColumnType("int");
+
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(400)
+                        .HasColumnType("nvarchar(400)");
 
                     b.HasKey("Id");
 
@@ -308,6 +344,21 @@ namespace VerySimpleForum.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("VerySimpleForum.DataBase.Models.Comment", b =>
+                {
+                    b.HasOne("VerySimpleForum.DataBase.Models.User", "BelongsTo")
+                        .WithMany()
+                        .HasForeignKey("BelongsToId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("VerySimpleForum.DataBase.Models.SubTopic", null)
+                        .WithMany("Comments")
+                        .HasForeignKey("SubTopicId");
+
+                    b.Navigation("BelongsTo");
+                });
+
             modelBuilder.Entity("VerySimpleForum.DataBase.Models.SubTopic", b =>
                 {
                     b.HasOne("VerySimpleForum.DataBase.Models.User", "Creator")
@@ -326,6 +377,8 @@ namespace VerySimpleForum.Migrations
 
             modelBuilder.Entity("VerySimpleForum.DataBase.Models.SubTopic", b =>
                 {
+                    b.Navigation("Comments");
+
                     b.Navigation("Likes");
                 });
 #pragma warning restore 612, 618

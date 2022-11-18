@@ -25,7 +25,7 @@ namespace VerySimpleForum.Pages.Account
             if (!ModelState.IsValid) return Page();
             if(Registration.Password != Registration.RepeatPassword)
             {
-                ModelState.AddModelError("Password","Passwords should be the same");
+                ModelState.AddModelError("Password","Passwords must be the same");
                 return Page();
             }
             var user = new User

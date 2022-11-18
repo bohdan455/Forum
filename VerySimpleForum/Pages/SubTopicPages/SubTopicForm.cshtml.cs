@@ -27,7 +27,7 @@ namespace VerySimpleForum.Pages.SubTopicPages
             if (!ModelState.IsValid) return Page();
             SubTopic subTopic = new SubTopic
             {
-                
+
                 Title = SubTopicData.Title,
                 Body = SubTopicData.Body,
                 Creator = context.Users.Where(u => u.UserName == User.Identity.Name).FirstOrDefault(),

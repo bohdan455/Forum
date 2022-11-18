@@ -2,7 +2,7 @@
 <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
 
 @if(User.Identity.IsAuthenticated){
-    <form method="post" class="form-inline" asp-page="account/logout">
+    <form method="post" class="form-inline" asp-page="/account/logout">
         <input type="submit" value="Sign out" />
     </form>
 }else{
