@@ -11,19 +11,21 @@ namespace VerySimpleForum.Pages.SubTopicPages
     public class SubTopicPageModel : PageModel
     {
         private readonly ApplicationDbContext context;
+        private readonly ILogger<SubTopicPageModel> logger;
+        private string _title;
 
         public SubTopicPageModel(ApplicationDbContext context, ILogger<SubTopicPageModel> logger)
         {
             this.context = context;
-            Logger = logger;
+            this.logger = logger;
         }
         [BindProperty]
         public SubTopic SubTopic { get; set; }
         [BindProperty]
         public CommentDTO Comment { get; set; }
-        public ILogger Logger { get; }
         public IActionResult OnGet(string title)
         {
+            _title = title;
             SubTopic = context.SubTopics.Where(SubTopic => SubTopic.Title == title).FirstOrDefault();
             if (SubTopic == null)
             {
@@ -33,11 +35,6 @@ namespace VerySimpleForum.Pages.SubTopicPages
             {
                 return Page();
             }
-        }
-        [Authorize]
-        public IActionResult OnPost()
-        {
-            return RedirectPermanent("/index");
         }
 
     }

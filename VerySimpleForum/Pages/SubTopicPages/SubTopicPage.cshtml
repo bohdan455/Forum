@@ -12,7 +12,12 @@
     <button type="submit" class="btn btn-primary" name="Test">Like</button>
 </form>
 <h1>Comments</h1>
-<form method="post">
+@{
+    var dictionary = new Dictionary<string, string>();
+    dictionary.Add("title", Model.SubTopic.Title);
+    dictionary.Add("body", Model.Comment?.Body);
+}
+<form method="post" asp-page="/SubTopicPages/CommentAction" asp-all-route-data="dictionary">
     <div>
         <label asp-for="Comment.Body">Content: </label> <br />
         <textarea asp-for="Comment.Body" class="form-control" rows="3"> </textarea>
