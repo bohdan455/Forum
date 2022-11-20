@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using VerySimpleForum.DataBase;
 using VerySimpleForum.DataBase.Models;
+using VerySimpleForum.DTO;
 
 namespace VerySimpleForum.Pages.SubTopicPages
 {
@@ -18,21 +19,23 @@ namespace VerySimpleForum.Pages.SubTopicPages
         }
 
         [Authorize]
-        public IActionResult OnPost(string title, string body)
+        public IActionResult OnPost(string title,CommentDTO comment)
         {
+            logger.LogInformation("Commention data is {Body}", comment.Body);
+            logger.LogInformation("Title is {title}", title);
             var subTopic = context.SubTopics.Where(s => s.Title == title).FirstOrDefault();
+            var user = context.Users.Where(u => u.UserName == User.Identity.Name).FirstOrDefault();
             if(subTopic.Comments == null)
             {
                 subTopic.Comments = new List<Comment>();
             }
-            if (ModelState.IsValid)
+            subTopic.Comments.Add(new Comment
             {
-                logger.LogInformation("Super informative {body}", body);
-            }
-            else
-            {
-                logger.LogError("ERROR");
-            }
+                BelongsTo = user,
+                Body = comment.Body,
+                CreatedTime = DateTime.Now,
+            });
+            context.SaveChanges();
             return RedirectToPage("/SubTopicPages/SubTopicPage", new { title = title });
         }
     }

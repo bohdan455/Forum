@@ -3,7 +3,6 @@
 @{
 }
 <h1>@Model.SubTopic.Title</h1>
-<h2>@Model.SubTopic.Likes</h2>
 <p>@Model.SubTopic.Body</p>
 <span>@Model.SubTopic.Created.ToUniversalTime()</span>
 <h5>Likes:@{ @Model.SubTopic.LikesNumber} </h5>
@@ -12,15 +11,39 @@
     <button type="submit" class="btn btn-primary" name="Test">Like</button>
 </form>
 <h1>Comments</h1>
-@{
-    var dictionary = new Dictionary<string, string>();
-    dictionary.Add("title", Model.SubTopic.Title);
-    dictionary.Add("body", Model.Comment?.Body);
+@if (User.Identity.IsAuthenticated)
+{
+    <form method="post" asp-page="/SubTopicPages/CommentAction" asp-route-title = "@Model.SubTopic.Title">
+        <div>
+            <label asp-for="Comment.Body">Content: </label> <br />
+            <textarea asp-for="Comment.Body" class="form-control" rows="3"> </textarea>
+        </div>
+        <input type="submit" value="Submit" class="btn btn-primary" />
+    </form>
 }
-<form method="post" asp-page="/SubTopicPages/CommentAction" asp-all-route-data="dictionary">
-    <div>
-        <label asp-for="Comment.Body">Content: </label> <br />
-        <textarea asp-for="Comment.Body" class="form-control" rows="3"> </textarea>
-    </div>
-    <input type="submit" value="Submit" class="btn btn-primary" />
-</form>
+@if (Model.SubTopic.Comments == null){
+    <h1>No comments</h1>
+}
+else{
+    <h1>Comments</h1>
+    @foreach (Comment comment in Model.SubTopic.Comments)
+    {
+        <div class="card mb-4">
+            <div class="card-body">
+                <p>@comment.Body</p>
+
+                <div class="d-flex justify-content-between">
+                    <div class="d-flex flex-row align-items-center">
+                        <p class="small mb-0 ms-2">@comment.BelongsTo.UserName</p>
+                        <p class="small mb-0 ms-2">Posted: @comment.CreatedTime</p>
+                    </div>
+                    <div class="d-flex flex-row align-items-center">
+                        <p class="small text-muted mb-0">Upvote?</p>
+                        <i class="far fa-thumbs-up mx-2 fa-xs text-black" style="margin-top: -0.16rem;"></i>
+                        <p class="small text-muted mb-0">4</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+}

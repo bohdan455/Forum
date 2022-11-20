@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
 using System.ComponentModel;
 using VerySimpleForum.DataBase;
 using VerySimpleForum.DataBase.Models;
@@ -20,13 +21,15 @@ namespace VerySimpleForum.Pages.SubTopicPages
             this.logger = logger;
         }
         [BindProperty]
-        public SubTopic SubTopic { get; set; }
+        public SubTopic? SubTopic { get; set; }
         [BindProperty]
         public CommentDTO Comment { get; set; }
         public IActionResult OnGet(string title)
         {
+
             _title = title;
-            SubTopic = context.SubTopics.Where(SubTopic => SubTopic.Title == title).FirstOrDefault();
+            SubTopic = context.SubTopics.Where(SubTopic => SubTopic.Title == title)
+                .Include(subTopic => subTopic.Comments).ThenInclude(comment => comment.BelongsTo).ToList().FirstOrDefault(); // eager loadding
             if (SubTopic == null)
             {
                 return NotFound();
