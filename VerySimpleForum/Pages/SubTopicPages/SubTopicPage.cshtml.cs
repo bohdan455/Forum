@@ -29,7 +29,10 @@ namespace VerySimpleForum.Pages.SubTopicPages
 
             _title = title;
             SubTopic = context.SubTopics.Where(SubTopic => SubTopic.Title == title)
-                .Include(subTopic => subTopic.Comments).ThenInclude(comment => comment.BelongsTo).ToList().FirstOrDefault(); // eager loadding
+                .Include(subTopic => subTopic.Comments).ThenInclude(comment => comment.BelongsTo)
+                .Include(subTopic => subTopic.Comments).ThenInclude(comment => comment.Likes)
+                .Include(subTopic => subTopic.Likes)
+                .ToList().FirstOrDefault(); // eager loadding
             if (SubTopic == null)
             {
                 return NotFound();

@@ -7,25 +7,26 @@ using VerySimpleForum.DTO;
 
 namespace VerySimpleForum.Pages.SubTopicPages
 {
-    public class CommentActionModel : PageModel
+    public class AddCommentModel : PageModel
     {
-        private readonly ApplicationDbContext context;
-        private readonly ILogger<CommentActionModel> logger;
 
-        public CommentActionModel(ApplicationDbContext context, ILogger<CommentActionModel> logger)
+
+        private readonly ApplicationDbContext context;
+        private readonly ILogger<AddCommentModel> logger;
+        public AddCommentModel(ApplicationDbContext context, ILogger<AddCommentModel> logger)
         {
             this.context = context;
             this.logger = logger;
         }
 
         [Authorize]
-        public IActionResult OnPost(string title,CommentDTO comment)
+        public IActionResult OnPost(string title, CommentDTO comment)
         {
             logger.LogInformation("Commention data is {Body}", comment.Body);
             logger.LogInformation("Title is {title}", title);
             var subTopic = context.SubTopics.Where(s => s.Title == title).FirstOrDefault();
             var user = context.Users.Where(u => u.UserName == User.Identity.Name).FirstOrDefault();
-            if(subTopic.Comments == null)
+            if (subTopic.Comments == null)
             {
                 subTopic.Comments = new List<Comment>();
             }
@@ -39,4 +40,6 @@ namespace VerySimpleForum.Pages.SubTopicPages
             return RedirectToPage("/SubTopicPages/SubTopicPage", new { title = title });
         }
     }
+
 }
+

@@ -5,15 +5,15 @@
 <h1>@Model.SubTopic.Title</h1>
 <p>@Model.SubTopic.Body</p>
 <span>@Model.SubTopic.Created.ToUniversalTime()</span>
-<h5>Likes:@{ @Model.SubTopic.LikesNumber} </h5>
+<h5>Likes:@( Model.SubTopic.Likes == null ? "0" : Model.SubTopic.Likes.Count()) </h5>
 
-<form method="post" asp-page="/SubTopicPages/LikeAction" asp-route-title="@Model.SubTopic.Title">
+<form method="post" asp-page="/SubTopicPages/SubTopicLike" asp-route-title="@Model.SubTopic.Title">
     <button type="submit" class="btn btn-primary" name="Test">Like</button>
 </form>
 <h1>Comments</h1>
 @if (User.Identity.IsAuthenticated)
 {
-    <form method="post" asp-page="/SubTopicPages/CommentAction" asp-route-title = "@Model.SubTopic.Title">
+    <form method="post" asp-page="/SubTopicPages/AddComment" asp-route-title = "@Model.SubTopic.Title">
         <div>
             <label asp-for="Comment.Body">Content: </label> <br />
             <textarea asp-for="Comment.Body" class="form-control" rows="3"> </textarea>
@@ -26,7 +26,7 @@
 }
 else{
     <h1>Comments</h1>
-    @foreach (Comment comment in Model.SubTopic.Comments)
+    @foreach (Comment comment in Model.SubTopic.Comments.Reverse())
     {
         <div class="card mb-4">
             <div class="card-body">
@@ -38,9 +38,11 @@ else{
                         <p class="small mb-0 ms-2">Posted: @comment.CreatedTime</p>
                     </div>
                     <div class="d-flex flex-row align-items-center">
-                        <p class="small text-muted mb-0">Upvote?</p>
+                        <form method="post" class="form-inline" asp-page = "/SubTopicPages/CommentLike" asp-route-id="@comment.Id">
+                            <button type="submit" class="small text-muted mb-0">Upvote</button>
+                        </form>
                         <i class="far fa-thumbs-up mx-2 fa-xs text-black" style="margin-top: -0.16rem;"></i>
-                        <p class="small text-muted mb-0">4</p>
+                        <p class="small text-muted mb-0">@(comment.Likes == null ? "0" : comment.Likes.Count())</p>
                     </div>
                 </div>
             </div>
